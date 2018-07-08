@@ -1,17 +1,57 @@
 package com.popularmovies.popularmovies;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.popularmovies.popularmovies.models.MoviePoster;
+import com.popularmovies.popularmovies.posters.MoviePosterFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindString;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
+
+    @BindString(R.string.app_name)
+    String popMovieTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        List<MoviePoster> moviePosterList = new ArrayList<>();
+        moviePosterList.add(0, new MoviePoster("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "KMovie"));
+        moviePosterList.add(1, new MoviePoster("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "KMovie"));
+        moviePosterList.add(2, new MoviePoster("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "KMovie"));
+        moviePosterList.add(3, new MoviePoster("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "KMovie"));
+        moviePosterList.add(4, new MoviePoster("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "KMovie"));
+        moviePosterList.add(5, new MoviePoster("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "KMovie"));
+        moviePosterList.add(6, new MoviePoster("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "KMovie"));
+        moviePosterList.add(7, new MoviePoster("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "KMovie"));
+
+
+        invalidateView(popMovieTitle, MoviePosterFragment.getInstance(moviePosterList));
+    }
+
+    public void invalidateView(String title, Fragment fragment) {
+        setTitle(title);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.layout_placeholder, fragment);
+        if (!(title.equals(popMovieTitle)))
+            fragmentTransaction.addToBackStack(title);
+        fragmentTransaction.commit();
     }
 
     /**

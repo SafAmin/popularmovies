@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="gv_movies_posters_column_width">150dp</dimen>
+    <dimen name="iv_movie_poster_width">150dp</dimen>
+    <dimen name="iv_movie_poster_height">200dp</dimen>
+    <dimen name="tv_move_name_padding">5dp</dimen>
+    <dimen name="tv_movie_details_name_margin_start">20dp</dimen>
+    <dimen name="layout_movie_details_padding_start">10dp</dimen>
+    <dimen name="layout_movie_details_padding_end">10dp</dimen>
+    <dimen name="layout_movie_details_padding_top">10dp</dimen>
+    <dimen name="iv_movie_details_poster_width">100dp</dimen>
+    <dimen name="iv_movie_details_poster_height">150dp</dimen>
+    <dimen name="layout_movie_details_overview_margin_top">10dp</dimen>
+
+    <dimen name="tv_movie_details_name_size">30sp</dimen>
+</resources>
