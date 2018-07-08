@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_highest_rated:
                 Toast.makeText(this, "Highest Rated", Toast.LENGTH_LONG).show();
                 break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
         return super.onOptionsItemSelected(item);
