@@ -12,18 +12,20 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/layout_movie_details_original_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="5"
             android:background="@color/colorBlueGreen"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_movie_details_name"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/tv_movie_details_name_margin_start"
-                android:gravity="center_vertical"
+                android:paddingTop="@dimen/tv_movie_details_name_padding_top"
+                android:paddingBottom="@dimen/tv_movie_details_name_padding_bottom"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/tv_movie_details_name_size"
@@ -44,9 +46,9 @@
                 android:layout_width="@dimen/iv_movie_details_poster_width"
                 android:layout_height="@dimen/iv_movie_details_poster_height"
                 android:layout_alignParentStart="true"
+                android:contentDescription="@string/movie_poster_description"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_launcher_background"
-                android:contentDescription="@string/movie_poster_description" />
+                android:src="@drawable/ic_launcher_background" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -72,6 +74,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorGray"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     tools:text="120min" />
 
                 <TextView
@@ -83,24 +86,13 @@
                     tools:text="8.1/10" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_movie_details_overview"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/iv_movie_details_poster"
                 android:layout_marginTop="@dimen/layout_movie_details_overview_margin_top"
-                android:orientation="vertical">
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/tv_movie_details_overview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                </ScrollView>
-            </LinearLayout>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

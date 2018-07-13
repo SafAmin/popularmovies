@@ -17,6 +17,20 @@ android {
         }
     }
 }
+android {
+    buildTypes {
+        debug {
+            buildConfigField 'String', "ApiKey", POPULAR_MOVIES_API_KEY
+            resValue 'string', "api_key", POPULAR_MOVIES_API_KEY
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', "ApiKey", POPULAR_MOVIES_API_KEY
+            resValue 'string', "api_key", POPULAR_MOVIES_API_KEY
+        }
+    }
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -25,7 +39,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // Butte Knife Field and method binding for Android views
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Retrofit 2 HTTP client for Android
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 }

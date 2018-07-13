@@ -9,11 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
 import com.popularmovies.popularmovies.details.MovieDetailsFragment;
-import com.popularmovies.popularmovies.models.MoviePoster;
+import com.popularmovies.popularmovies.models.MovieDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +37,15 @@ public class MoviePosterFragment extends Fragment {
     private static String MOVIE_POSTER_PARAM = "MOVIE_POSTER";
     @BindView(R.id.gv_movies_posters)
     GridView gvMoviesPosters;
+    @BindString(R.string.app_name)
+    String popMovieScreenTitle;
     @BindString(R.string.movie_details_screen_title)
     String movieDetailsTitle;
-    private Unbinder unbinder;
-    private List<MoviePoster> moviePosterList;
 
-    public static MoviePosterFragment getInstance(List<MoviePoster> moviePosterList) {
+    private Unbinder unbinder;
+    private List<MovieDetails> movieDetailsList;
+
+    public static MoviePosterFragment getInstance(List<MovieDetails> moviePosterList) {
         MoviePosterFragment fragment = new MoviePosterFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(MOVIE_POSTER_PARAM, (ArrayList<? extends Parcelable>) moviePosterList);
@@ -53,23 +57,26 @@ public class MoviePosterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies_posters, parent, false);
+
         unbinder = ButterKnife.bind(this, view);
 
         Bundle args = getArguments();
-        moviePosterList = args.getParcelableArrayList(MOVIE_POSTER_PARAM);
+        movieDetailsList = args.getParcelableArrayList(MOVIE_POSTER_PARAM);
+
+        ((MainActivity) getActivity()).setScreenTitle(popMovieScreenTitle);
 
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        MoviePosterAdapter adapter = new MoviePosterAdapter(getActivity(), moviePosterList);
+        MoviePosterAdapter adapter = new MoviePosterAdapter(getActivity(), movieDetailsList);
         gvMoviesPosters.setAdapter(adapter);
         gvMoviesPosters.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivity) getActivity()).invalidateView(movieDetailsTitle,
-                        MovieDetailsFragment.getInstance());
+                ((MainActivity) getActivity()).invalidateView(movieDetailsTitle, MovieDetailsFragment.
+                        getInstance(movieDetailsList.get(position)));
             }
         });
     }
@@ -77,6 +84,7 @@ public class MoviePosterFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         unbinder.unbind();
     }
 }

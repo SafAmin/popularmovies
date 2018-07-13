@@ -11,6 +11,8 @@
     <dimen name="iv_movie_details_poster_width">100dp</dimen>
     <dimen name="iv_movie_details_poster_height">150dp</dimen>
     <dimen name="layout_movie_details_overview_margin_top">10dp</dimen>
+    <dimen name="tv_movie_details_name_padding_top">50dp</dimen>
+    <dimen name="tv_movie_details_name_padding_bottom">50dp</dimen>
 
     <dimen name="tv_movie_details_name_size">30sp</dimen>
 </resources>

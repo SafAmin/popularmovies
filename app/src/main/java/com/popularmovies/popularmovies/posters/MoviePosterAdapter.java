@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.popularmovies.popularmovies.R;
-import com.popularmovies.popularmovies.models.MoviePoster;
+import com.popularmovies.popularmovies.models.MovieDetails;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -27,11 +27,11 @@ import butterknife.ButterKnife;
 public class MoviePosterAdapter extends BaseAdapter {
 
     private Context context;
-    private List<MoviePoster> moviePosterList;
+    private List<MovieDetails> movieDetailsList;
 
-    MoviePosterAdapter(Context context, List<MoviePoster> moviePosterList) {
+    MoviePosterAdapter(Context context, List<MovieDetails> movieDetailsList) {
         this.context = context;
-        this.moviePosterList = moviePosterList;
+        this.movieDetailsList = movieDetailsList;
     }
 
     @Override
@@ -39,7 +39,8 @@ public class MoviePosterAdapter extends BaseAdapter {
         ViewHolder holder;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (view == null) {
-            view = inflater != null ? inflater.inflate(R.layout.movie_poster_item_view, viewGroup, false) : null;
+            view = inflater != null ? inflater.inflate(R.layout.movie_poster_item_view, viewGroup,
+                    false) : null;
             holder = new ViewHolder(view);
             if (view != null) {
                 view.setTag(holder);
@@ -47,11 +48,11 @@ public class MoviePosterAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        MoviePoster moviePoster = moviePosterList.get(position);
+        MovieDetails movieDetails = movieDetailsList.get(position);
         // Picasso.get().setLoggingEnabled(true);
         Picasso.get().load("http://image.tmdb.org/t/p/w185//" +
-                moviePoster.getMoviePoster()).into(holder.ivMoviePoster);
-        holder.tvMovieName.setText(moviePoster.getMovieName());
+                movieDetails.getMoviePoster()).into(holder.ivMoviePoster);
+        holder.tvMovieName.setText(movieDetails.getMovieName());
 
         return view;
     }
@@ -69,8 +70,8 @@ public class MoviePosterAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (moviePosterList.size() > 0)
-            return moviePosterList.size();
+        if (movieDetailsList.size() > 0)
+            return movieDetailsList.size();
         else
             return 0;
     }
