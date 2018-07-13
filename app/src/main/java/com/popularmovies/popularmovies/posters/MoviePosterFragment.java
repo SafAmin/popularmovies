@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
@@ -35,6 +34,7 @@ import butterknife.Unbinder;
 public class MoviePosterFragment extends Fragment {
 
     private static String MOVIE_POSTER_PARAM = "MOVIE_POSTER";
+    private static String MOVIE_POSTER_CURRENT_STATE_PARAM = "MOVIE_POSTER_CURRENT_STATE";
     @BindView(R.id.gv_movies_posters)
     GridView gvMoviesPosters;
     @BindString(R.string.app_name)
@@ -60,6 +60,10 @@ public class MoviePosterFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, view);
 
+        if(savedInstanceState != null) {
+            movieDetailsList = savedInstanceState.getParcelableArrayList(MOVIE_POSTER_CURRENT_STATE_PARAM);
+        }
+
         Bundle args = getArguments();
         movieDetailsList = args.getParcelableArrayList(MOVIE_POSTER_PARAM);
 
@@ -79,6 +83,17 @@ public class MoviePosterFragment extends Fragment {
                         getInstance(movieDetailsList.get(position)));
             }
         });
+    }
+
+    /**
+     * Save the current state of this fragment
+     */
+    @Override
+    public void onSaveInstanceState(Bundle currentState) {
+        super.onSaveInstanceState(currentState);
+
+        currentState.putParcelableArrayList(MOVIE_POSTER_CURRENT_STATE_PARAM,
+                (ArrayList<? extends Parcelable>) movieDetailsList);
     }
 
     @Override

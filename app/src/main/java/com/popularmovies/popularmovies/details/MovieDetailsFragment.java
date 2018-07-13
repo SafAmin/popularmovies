@@ -1,6 +1,7 @@
 package com.popularmovies.popularmovies.details;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +15,8 @@ import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
 import com.popularmovies.popularmovies.models.MovieDetails;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -30,6 +33,7 @@ import butterknife.Unbinder;
 public class MovieDetailsFragment extends Fragment {
 
     private static String MOVIE_DETAILS_PARAM = "MOVIE_DETAILS";
+    private static String MOVIE_DETAILS_CURRENT_STATE_PARAM = "MOVIE_DETAILS_CURRENT_STATE";
     @BindView(R.id.iv_movie_details_poster)
     ImageView ivMoviePoster;
     @BindView(R.id.tv_movie_details_name)
@@ -70,6 +74,10 @@ public class MovieDetailsFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, view);
 
+        if(savedInstanceState != null) {
+            movieDetails = savedInstanceState.getParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM);
+        }
+
         Bundle args = getArguments();
         movieDetails = args.getParcelable(MOVIE_DETAILS_PARAM);
 
@@ -98,6 +106,16 @@ public class MovieDetailsFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
         menu.clear();
+    }
+
+    /**
+     * Save the current state of this fragment
+     */
+    @Override
+    public void onSaveInstanceState(Bundle currentState) {
+        super.onSaveInstanceState(currentState);
+
+        currentState.putParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM, movieDetails);
     }
 
     @Override

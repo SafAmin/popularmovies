@@ -52,14 +52,17 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.setMessage(loading);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (savedInstanceState == null) {
 
-        service = PopularMoviesClient.getRetrofitInstance().create(PopularMoviesInterface.class);
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage(loading);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
 
-        getPopularMovies();
+            service = PopularMoviesClient.getRetrofitInstance().create(PopularMoviesInterface.class);
+
+            getPopularMovies();
+        }
     }
 
     public void addToolbarNavigationListener() {
