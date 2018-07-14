@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_movie_trailer_icon"
+        android:layout_width="@dimen/iv_movie_trailer_play_icon_width"
+        android:layout_height="@dimen/iv_movie_trailer_play_icon_height"
+        android:contentDescription="@string/movie_poster_description"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_baseline_play_arrow" />
+
+    <TextView
+        android:id="@+id/tv_movie_trailer_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/iv_movie_trailer_number_margin_start"
+        android:textColor="@color/colorBlack"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+</LinearLayout>
