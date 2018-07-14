@@ -1,10 +1,13 @@
 package com.popularmovies.popularmovies.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class PopularMoviesResponse {
+public class PopularMoviesResponse implements Parcelable {
 
     @SerializedName("page")
     private int page;
@@ -49,4 +52,39 @@ public class PopularMoviesResponse {
     public int getTotalResults() {
         return totalResults;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.page);
+        dest.writeInt(this.totalPages);
+        dest.writeTypedList(this.results);
+        dest.writeInt(this.totalResults);
+    }
+
+    public PopularMoviesResponse() {
+    }
+
+    protected PopularMoviesResponse(Parcel in) {
+        this.page = in.readInt();
+        this.totalPages = in.readInt();
+        this.results = in.createTypedArrayList(ResultsItem.CREATOR);
+        this.totalResults = in.readInt();
+    }
+
+    public static final Creator<PopularMoviesResponse> CREATOR = new Creator<PopularMoviesResponse>() {
+        @Override
+        public PopularMoviesResponse createFromParcel(Parcel source) {
+            return new PopularMoviesResponse(source);
+        }
+
+        @Override
+        public PopularMoviesResponse[] newArray(int size) {
+            return new PopularMoviesResponse[size];
+        }
+    };
 }

@@ -1,7 +1,6 @@
 package com.popularmovies.popularmovies.details;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +14,6 @@ import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
 import com.popularmovies.popularmovies.models.MovieDetails;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -74,7 +71,7 @@ public class MovieDetailsFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, view);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             movieDetails = savedInstanceState.getParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM);
         }
 

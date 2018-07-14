@@ -60,7 +60,7 @@ public class MoviePosterFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, view);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             movieDetailsList = savedInstanceState.getParcelableArrayList(MOVIE_POSTER_CURRENT_STATE_PARAM);
         }
 
