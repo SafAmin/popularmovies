@@ -52,15 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        if (savedInstanceState == null) {
+        service = PopularMoviesClient.getRetrofitInstance().create(PopularMoviesInterface.class);
 
-            progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog = new ProgressDialog(MainActivity.this);
+
+        if (savedInstanceState == null) {
             progressDialog.setMessage(loading);
             progressDialog.setCancelable(false);
             progressDialog.show();
-
-            service = PopularMoviesClient.getRetrofitInstance().create(PopularMoviesInterface.class);
-
             getPopularMovies();
         }
     }
