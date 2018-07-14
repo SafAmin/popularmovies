@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -50,7 +51,7 @@ public class MoviePosterAdapter extends BaseAdapter {
         }
         MovieDetails movieDetails = movieDetailsList.get(position);
         // Picasso.get().setLoggingEnabled(true);
-        Picasso.get().load("http://image.tmdb.org/t/p/w185//" +
+        Picasso.get().load(holder.moviePosterBaseURL +
                 movieDetails.getMoviePoster()).into(holder.ivMoviePoster);
         holder.tvMovieName.setText(movieDetails.getMovieName());
 
@@ -62,6 +63,8 @@ public class MoviePosterAdapter extends BaseAdapter {
         ImageView ivMoviePoster;
         @BindView(R.id.tv_movie_name)
         TextView tvMovieName;
+        @BindString(R.string.movie_poster_base_url)
+        String moviePosterBaseURL;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

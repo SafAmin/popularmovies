@@ -43,6 +43,8 @@ public class MovieDetailsFragment extends Fragment {
     TextView tvMovieOverview;
     @BindString(R.string.movie_details_screen_title)
     String movieDetailsTitle;
+    @BindString(R.string.movie_poster_base_url)
+    String moviePosterBaseURL;
     @BindString(R.string.movie_details_rate)
     String rateOutOf;
 
@@ -90,8 +92,7 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     private void invalidateMovieDetailsView() {
-        Picasso.get().load("http://image.tmdb.org/t/p/w185//" +
-                movieDetails.getMoviePoster()).into(ivMoviePoster);
+        Picasso.get().load(moviePosterBaseURL + movieDetails.getMoviePoster()).into(ivMoviePoster);
         tvMovieName.setText(movieDetails.getMovieName());
         tvMovieReleaseDate.setText(movieDetails.getMovieReleaseDate());
         tvMovieRate.setText(movieDetails.getMovieRating() + rateOutOf);
