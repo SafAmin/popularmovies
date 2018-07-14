@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.popularmovies.popularmovies.models.MovieDetails;
 import com.popularmovies.popularmovies.models.PopularMoviesResponse;
 import com.popularmovies.popularmovies.models.ResultsItem;
+import com.popularmovies.popularmovies.network.PopularMoviesAPIs;
 import com.popularmovies.popularmovies.network.PopularMoviesClient;
-import com.popularmovies.popularmovies.network.PopularMoviesInterface;
 import com.popularmovies.popularmovies.posters.MoviePosterFragment;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     @BindString(R.string.movie_details_error)
     String error;
     private ProgressDialog progressDialog;
-    private PopularMoviesInterface service;
+    private PopularMoviesAPIs service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        service = PopularMoviesClient.getRetrofitInstance().create(PopularMoviesInterface.class);
+        service = PopularMoviesClient.getRetrofitInstance().create(PopularMoviesAPIs.class);
 
         progressDialog = new ProgressDialog(MainActivity.this);
 

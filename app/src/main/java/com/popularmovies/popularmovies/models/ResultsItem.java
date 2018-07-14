@@ -1,5 +1,6 @@
 package com.popularmovies.popularmovies.models;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
