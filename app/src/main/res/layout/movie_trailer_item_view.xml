@@ -20,4 +20,9 @@
         android:layout_marginStart="@dimen/iv_movie_trailer_number_margin_start"
         android:textColor="@color/colorBlack"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGray"/>
 </LinearLayout>

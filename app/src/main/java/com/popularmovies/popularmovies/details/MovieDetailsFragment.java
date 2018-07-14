@@ -2,12 +2,14 @@ package com.popularmovies.popularmovies.details;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.popularmovies.popularmovies.MainActivity;
@@ -41,6 +43,14 @@ public class MovieDetailsFragment extends Fragment {
     TextView tvMovieRate;
     @BindView(R.id.tv_movie_details_overview)
     TextView tvMovieOverview;
+    @BindView(R.id.layout_movie_trailers)
+    LinearLayout layoutMovieTrailersContainer;
+    @BindView(R.id.layout_movie_reviews)
+    LinearLayout layoutMovieReviewsContainer;
+    @BindView(R.id.rv_movie_trailers)
+    RecyclerView rvMovieTrailers;
+    @BindView(R.id.rv_movie_reviews)
+    RecyclerView rvMovieReviews;
     @BindString(R.string.movie_details_screen_title)
     String movieDetailsTitle;
     @BindString(R.string.movie_poster_base_url)

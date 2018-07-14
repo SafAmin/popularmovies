@@ -17,6 +17,12 @@
     <dimen name="iv_movie_trailer_play_icon_height">25dp</dimen>
     <dimen name="iv_movie_trailer_number_margin_start">10dp</dimen>
     <dimen name="iv_movie_review_margin_start">10dp</dimen>
+    <dimen name="layout_movie_trailers_margin_top">10dp</dimen>
+    <dimen name="rv_movie_trailers_margin_top">10dp</dimen>
+    <dimen name="rv_movie_trailers_margin_start">10dp</dimen>
+    <dimen name="layout_movie_reviews_margin_top">10dp</dimen>
+    <dimen name="rv_movie_reviews_margin_top">10dp</dimen>
+    <dimen name="rv_movie_reviews_margin_start">10dp</dimen>
 
     <dimen name="tv_movie_details_name_size">30sp</dimen>
 </resources>
