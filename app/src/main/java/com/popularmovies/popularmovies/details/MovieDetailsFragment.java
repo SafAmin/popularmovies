@@ -1,7 +1,9 @@
 package com.popularmovies.popularmovies.details;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,15 +14,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.popularmovies.popularmovies.BuildConfig;
 import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
 import com.popularmovies.popularmovies.models.MovieDetails;
+import com.popularmovies.popularmovies.models.MovieTrailersResponse;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * This fragment responsible for display movie details like
@@ -60,6 +67,7 @@ public class MovieDetailsFragment extends Fragment {
 
     private Unbinder unbinder;
     private MovieDetails movieDetails;
+    private MainActivity mainActivity;
 
     public static MovieDetailsFragment getInstance(MovieDetails movieDetails) {
         MovieDetailsFragment fragment = new MovieDetailsFragment();
@@ -75,6 +83,7 @@ public class MovieDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -90,14 +99,18 @@ public class MovieDetailsFragment extends Fragment {
         Bundle args = getArguments();
         movieDetails = args.getParcelable(MOVIE_DETAILS_PARAM);
 
-        ((MainActivity) getActivity()).setScreenTitle(movieDetailsTitle);
-        ((MainActivity) getActivity()).addToolbarNavigationListener();
+        mainActivity.setScreenTitle(movieDetailsTitle);
+        mainActivity.addToolbarNavigationListener();
 
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvMovieTrailers.setLayoutManager(mLayoutManager);
+        rvMovieTrailers.setNestedScrollingEnabled(false);
+        getMovieTrailers(movieDetails.getMovieId());
         invalidateMovieDetailsView();
     }
 
@@ -107,6 +120,29 @@ public class MovieDetailsFragment extends Fragment {
         tvMovieReleaseDate.setText(movieDetails.getMovieReleaseDate());
         tvMovieRate.setText(movieDetails.getMovieRating() + rateOutOf);
         tvMovieOverview.setText(movieDetails.getMovieOverview());
+    }
+
+    public void getMovieTrailers(int movieId) {
+        Call<MovieTrailersResponse> call = mainActivity.getPopularMoviesAPI().getMovieTrailers(movieId, BuildConfig.ApiKey);
+        call.enqueue(new Callback<MovieTrailersResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieTrailersResponse> call,
+                                   @NonNull Response<MovieTrailersResponse> response) {
+                mainActivity.getProgressDialog().dismiss();
+                if (response.body().getResults() != null) {
+                    layoutMovieTrailersContainer.setVisibility(View.VISIBLE);
+                    rvMovieTrailers.setAdapter(new MovieTrailersAdapter(response.body().getResults()));
+                } else {
+                    layoutMovieTrailersContainer.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieTrailersResponse> call, @NonNull Throwable t) {
+                mainActivity.getProgressDialog().dismiss();
+                layoutMovieTrailersContainer.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override

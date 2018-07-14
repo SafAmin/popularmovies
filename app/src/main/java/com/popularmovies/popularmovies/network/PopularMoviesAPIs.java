@@ -23,10 +23,10 @@ public interface PopularMoviesAPIs {
     Call<PopularMoviesResponse> getTopRatedMovies(@Query("api_key") String key);
 
     @GET("movie/{id}/videos")
-    Call<MovieTrailersResponse> getMovieTrailers(@Path(value = "id", encoded = true) String movieId,
+    Call<MovieTrailersResponse> getMovieTrailers(@Path(value = "id", encoded = true) int movieId,
                                                  @Query("api_key") String key);
 
     @GET("movie/{id}/reviews")
-    Call<MovieReviewsResponse> getMovieReviews(@Path(value = "id", encoded = true) String movieId,
+    Call<MovieReviewsResponse> getMovieReviews(@Path(value = "id", encoded = true) int movieId,
                                                @Query("api_key") String key);
 }

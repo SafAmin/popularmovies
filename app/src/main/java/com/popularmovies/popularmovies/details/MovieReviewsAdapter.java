@@ -27,7 +27,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
     private List<MovieReviewsResultsItem> movieReviews;
 
     public MovieReviewsAdapter(List<MovieReviewsResultsItem> movieReviews) {
-        this.movieReviews = this.movieReviews;
+        this.movieReviews = movieReviews;
     }
 
     @Override

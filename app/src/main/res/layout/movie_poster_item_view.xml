@@ -16,5 +16,5 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/tv_move_name_padding"
         android:background="@color/colorTransparentBlack"
-        android:textColor="@color/colorWhite"/>
+        android:textColor="@color/colorWhite" />
 </FrameLayout>

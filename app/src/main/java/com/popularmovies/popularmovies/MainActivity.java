@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void getMovieTrailers(String movieId) {
+    public void getMovieTrailers(int movieId) {
         Call<MovieTrailersResponse> call = service.getMovieTrailers(movieId, BuildConfig.ApiKey);
         call.enqueue(new Callback<MovieTrailersResponse>() {
             @Override
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void getMovieReviews(String movieId) {
+    public void getMovieReviews(int movieId) {
         Call<MovieReviewsResponse> call = service.getMovieReviews(movieId, BuildConfig.ApiKey);
         call.enqueue(new Callback<MovieReviewsResponse>() {
             @Override
@@ -169,6 +169,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void setScreenTitle(String title) {
         toolbar.setTitle(title);
+    }
+
+    public PopularMoviesAPIs getPopularMoviesAPI() {
+        return service;
+    }
+
+    public ProgressDialog getProgressDialog() {
+        return progressDialog;
     }
 
     /**

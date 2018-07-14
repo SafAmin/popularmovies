@@ -28,7 +28,7 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
     private List<MovieTrailersResultsItem> movieTrailers;
 
     public MovieTrailersAdapter(List<MovieTrailersResultsItem> movieTrailers) {
-        this.movieTrailers = this.movieTrailers;
+        this.movieTrailers = movieTrailers;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         }
 
         public void bindData(MovieTrailersResultsItem model, int position) {
-            tvMovieTrailerNumber.setText(trailer + position);
+            tvMovieTrailerNumber.setText(trailer + " " + (position + 1));
         }
     }
 }
