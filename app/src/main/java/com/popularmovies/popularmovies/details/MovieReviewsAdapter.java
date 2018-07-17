@@ -63,7 +63,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
 
         public void bindData(MovieReviewsResultsItem model, int position) {
             tvMovieReview.setText(model.getContent());
-            if(position == movieReviews.size() - 1) {
+            if (position == movieReviews.size() - 1) {
                 movieReviewsSeparator.setVisibility(View.GONE);
             }
         }

@@ -1,6 +1,5 @@
 package com.popularmovies.popularmovies.details;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.popularmovies.popularmovies.BuildConfig;
 import com.popularmovies.popularmovies.MainActivity;
@@ -151,7 +149,7 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     private void handleOnFavoriteClick() {
-        if(movieDetails.isFavorite()) {
+        if (movieDetails.isFavorite()) {
             ivMovieFavorite.setImageResource(R.drawable.ic_baseline_star_border);
             Toast.makeText(mainActivity, removeFromFavorite, Toast.LENGTH_SHORT).show();
         } else {

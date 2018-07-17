@@ -14,8 +14,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.popularmovies.popularmovies.models.MovieDetails;
-import com.popularmovies.popularmovies.models.MovieReviewsResponse;
-import com.popularmovies.popularmovies.models.MovieTrailersResponse;
 import com.popularmovies.popularmovies.models.PopularMoviesResponse;
 import com.popularmovies.popularmovies.models.ResultsItem;
 import com.popularmovies.popularmovies.network.PopularMoviesAPIs;
@@ -106,40 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<PopularMoviesResponse> call, @NonNull Throwable t) {
-                progressDialog.dismiss();
-                Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void getMovieTrailers(int movieId) {
-        Call<MovieTrailersResponse> call = service.getMovieTrailers(movieId, BuildConfig.ApiKey);
-        call.enqueue(new Callback<MovieTrailersResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieTrailersResponse> call,
-                                   @NonNull Response<MovieTrailersResponse> response) {
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<MovieTrailersResponse> call, @NonNull Throwable t) {
-                progressDialog.dismiss();
-                Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void getMovieReviews(int movieId) {
-        Call<MovieReviewsResponse> call = service.getMovieReviews(movieId, BuildConfig.ApiKey);
-        call.enqueue(new Callback<MovieReviewsResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieReviewsResponse> call,
-                                   @NonNull Response<MovieReviewsResponse> response) {
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<MovieReviewsResponse> call, @NonNull Throwable t) {
                 progressDialog.dismiss();
                 Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
             }
