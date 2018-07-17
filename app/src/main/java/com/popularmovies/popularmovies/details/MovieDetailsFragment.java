@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.popularmovies.popularmovies.BuildConfig;
 import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
 import com.popularmovies.popularmovies.models.MovieDetails;
+import com.popularmovies.popularmovies.models.MovieReviewsResponse;
 import com.popularmovies.popularmovies.models.MovieTrailersResponse;
 import com.squareup.picasso.Picasso;
 
@@ -111,6 +113,7 @@ public class MovieDetailsFragment extends Fragment {
         rvMovieTrailers.setLayoutManager(mLayoutManager);
         rvMovieTrailers.setNestedScrollingEnabled(false);
         getMovieTrailers(movieDetails.getMovieId());
+        getMovieReviews(movieDetails.getMovieId());
         invalidateMovieDetailsView();
     }
 
@@ -141,6 +144,29 @@ public class MovieDetailsFragment extends Fragment {
             public void onFailure(@NonNull Call<MovieTrailersResponse> call, @NonNull Throwable t) {
                 mainActivity.getProgressDialog().dismiss();
                 layoutMovieTrailersContainer.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    public void getMovieReviews(int movieId) {
+        Call<MovieReviewsResponse> call = mainActivity.getPopularMoviesAPI().getMovieReviews(movieId, BuildConfig.ApiKey);
+        call.enqueue(new Callback<MovieReviewsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieReviewsResponse> call,
+                                   @NonNull Response<MovieReviewsResponse> response) {
+                mainActivity.getProgressDialog().dismiss();
+                if (response.body().getResults() != null) {
+                    layoutMovieReviewsContainer.setVisibility(View.VISIBLE);
+                    rvMovieReviews.setAdapter(new MovieReviewsAdapter(response.body().getResults()));
+                } else {
+                    layoutMovieReviewsContainer.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieReviewsResponse> call, @NonNull Throwable t) {
+                mainActivity.getProgressDialog().dismiss();
+                layoutMovieReviewsContainer.setVisibility(View.GONE);
             }
         });
     }

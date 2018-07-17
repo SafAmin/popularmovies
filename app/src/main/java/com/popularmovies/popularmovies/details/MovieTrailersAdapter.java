@@ -53,8 +53,6 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
 
         @BindView(R.id.tv_movie_trailer_number)
         TextView tvMovieTrailerNumber;
-        @BindString(R.string.movie_details_trailer)
-        String trailer;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -63,7 +61,7 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         }
 
         public void bindData(MovieTrailersResultsItem model, int position) {
-            tvMovieTrailerNumber.setText(trailer + " " + (position + 1));
+            tvMovieTrailerNumber.setText(model.getType() + " " + (position + 1));
         }
     }
 }

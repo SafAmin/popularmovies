@@ -94,7 +94,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/layout_movie_trailers_margin_top"
                 android:layout_below="@+id/tv_movie_details_overview"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_movie_trailers_title"
@@ -118,7 +119,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/layout_movie_reviews_margin_top"
                 android:layout_below="@+id/layout_movie_trailers"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_movie_reviews_title"

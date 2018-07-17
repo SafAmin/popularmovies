@@ -7,7 +7,6 @@
     <string name="movie_details_error">Something went wrong...Please try later!</string>
     <string name="movie_details_rate">/10</string>
     <string name="movie_details_trailer_title">Trailers:</string>
-    <string name="movie_details_trailer">Trailer</string>
     <string name="movie_details_reviews_title">Reviews:</string>
     <string name="movie_poster_description" translatable="false">Poster</string>
 </resources>
