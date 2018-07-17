@@ -78,6 +78,14 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/colorBlack" />
+
+                <ImageView
+                    android:id="@+id/iv_movie_favorite"
+                    android:layout_width="@dimen/iv_movie_favorite_width"
+                    android:layout_height="@dimen/iv_movie_favorite_height"
+                    android:contentDescription="@string/movie_poster_description"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_baseline_star_border" />
             </LinearLayout>
 
             <TextView

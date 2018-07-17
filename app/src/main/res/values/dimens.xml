@@ -33,6 +33,7 @@
     <dimen name="layout_movie_reviews_margin_top">10dp</dimen>
     <dimen name="rv_movie_reviews_margin_top">10dp</dimen>
     <dimen name="rv_movie_reviews_margin_start">10dp</dimen>
-
     <dimen name="tv_movie_details_name_size">30sp</dimen>
+    <dimen name="iv_movie_favorite_width">40dp</dimen>
+    <dimen name="iv_movie_favorite_height">40dp</dimen>
 </resources>

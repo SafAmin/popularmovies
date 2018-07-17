@@ -52,6 +52,8 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
 
         @BindView(R.id.tv_movie_review)
         TextView tvMovieReview;
+        @BindView(R.id.view_movie_reviews_separator)
+        View movieReviewsSeparator;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -61,6 +63,9 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
 
         public void bindData(MovieReviewsResultsItem model, int position) {
             tvMovieReview.setText(model.getContent());
+            if(position == movieReviews.size() - 1) {
+                movieReviewsSeparator.setVisibility(View.GONE);
+            }
         }
     }
 }

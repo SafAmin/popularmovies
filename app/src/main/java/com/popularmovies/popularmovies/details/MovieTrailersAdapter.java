@@ -1,11 +1,16 @@
 package com.popularmovies.popularmovies.details;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
 import com.popularmovies.popularmovies.models.MovieTrailersResultsItem;
 
@@ -25,9 +30,11 @@ import butterknife.ButterKnife;
 
 public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdapter.ViewHolder> {
 
+    private Context context;
     private List<MovieTrailersResultsItem> movieTrailers;
 
-    public MovieTrailersAdapter(List<MovieTrailersResultsItem> movieTrailers) {
+    public MovieTrailersAdapter(Context context, List<MovieTrailersResultsItem> movieTrailers) {
+        this.context = context;
         this.movieTrailers = movieTrailers;
     }
 
@@ -58,10 +65,27 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    watchTrailerInYoutube(movieTrailers.get(getAdapterPosition()).getKey());
+                }
+            });
+        }
+
+        public void watchTrailerInYoutube(String id){
+            Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+            Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v=" + id));
+            try {
+                context.startActivity(appIntent);
+            } catch (ActivityNotFoundException ex) {
+                context.startActivity(webIntent);
+            }
         }
 
         public void bindData(MovieTrailersResultsItem model, int position) {
-            tvMovieTrailerNumber.setText(model.getType() + " " + (position + 1));
+            tvMovieTrailerNumber.setText(model.getName());
         }
     }
 }

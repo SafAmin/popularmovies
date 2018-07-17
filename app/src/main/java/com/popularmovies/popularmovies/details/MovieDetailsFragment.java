@@ -1,5 +1,6 @@
 package com.popularmovies.popularmovies.details;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.popularmovies.popularmovies.BuildConfig;
 import com.popularmovies.popularmovies.MainActivity;
@@ -60,12 +62,19 @@ public class MovieDetailsFragment extends Fragment {
     RecyclerView rvMovieTrailers;
     @BindView(R.id.rv_movie_reviews)
     RecyclerView rvMovieReviews;
+    @BindView(R.id.iv_movie_favorite)
+    ImageView ivMovieFavorite;
     @BindString(R.string.movie_details_screen_title)
     String movieDetailsTitle;
     @BindString(R.string.movie_poster_base_url)
     String moviePosterBaseURL;
     @BindString(R.string.movie_details_rate)
     String rateOutOf;
+    @BindString(R.string.movie_details_add_favorite_message)
+    String addToFavorite;
+    @BindString(R.string.movie_details_remove_favorite_message)
+    String removeFromFavorite;
+
 
     private Unbinder unbinder;
     private MovieDetails movieDetails;
@@ -109,6 +118,16 @@ public class MovieDetailsFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        invalidateMovieDetailsView();
+    }
+
+    private void invalidateMovieDetailsView() {
+        Picasso.get().load(moviePosterBaseURL + movieDetails.getMoviePoster()).into(ivMoviePoster);
+        tvMovieName.setText(movieDetails.getMovieName());
+        tvMovieReleaseDate.setText(movieDetails.getMovieReleaseDate());
+        tvMovieRate.setText(movieDetails.getMovieRating() + rateOutOf);
+        tvMovieOverview.setText(movieDetails.getMovieOverview());
+
         RecyclerView.LayoutManager trailersLayoutManager = new LinearLayoutManager(getContext());
         rvMovieTrailers.setLayoutManager(trailersLayoutManager);
         rvMovieTrailers.setNestedScrollingEnabled(false);
@@ -120,15 +139,25 @@ public class MovieDetailsFragment extends Fragment {
         getMovieTrailers(movieDetails.getMovieId());
         getMovieReviews(movieDetails.getMovieId());
 
-        invalidateMovieDetailsView();
+        addFavoriteIconListener();
     }
 
-    private void invalidateMovieDetailsView() {
-        Picasso.get().load(moviePosterBaseURL + movieDetails.getMoviePoster()).into(ivMoviePoster);
-        tvMovieName.setText(movieDetails.getMovieName());
-        tvMovieReleaseDate.setText(movieDetails.getMovieReleaseDate());
-        tvMovieRate.setText(movieDetails.getMovieRating() + rateOutOf);
-        tvMovieOverview.setText(movieDetails.getMovieOverview());
+    private void addFavoriteIconListener() {
+        ivMovieFavorite.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                handleOnFavoriteClick();
+            }
+        });
+    }
+
+    private void handleOnFavoriteClick() {
+        if(movieDetails.isFavorite()) {
+            ivMovieFavorite.setImageResource(R.drawable.ic_baseline_star_border);
+            Toast.makeText(mainActivity, removeFromFavorite, Toast.LENGTH_SHORT).show();
+        } else {
+            ivMovieFavorite.setImageResource(R.drawable.ic_baseline_star);
+            Toast.makeText(mainActivity, addToFavorite, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void getMovieTrailers(int movieId) {
@@ -140,7 +169,7 @@ public class MovieDetailsFragment extends Fragment {
                 mainActivity.getProgressDialog().dismiss();
                 if (response.body().getResults() != null && response.body().getResults().size() > 0) {
                     layoutMovieTrailersContainer.setVisibility(View.VISIBLE);
-                    rvMovieTrailers.setAdapter(new MovieTrailersAdapter(response.body().getResults()));
+                    rvMovieTrailers.setAdapter(new MovieTrailersAdapter(mainActivity, response.body().getResults()));
                 } else {
                     layoutMovieTrailersContainer.setVisibility(View.GONE);
                 }

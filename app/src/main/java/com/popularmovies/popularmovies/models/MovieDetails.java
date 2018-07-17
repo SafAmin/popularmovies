@@ -15,6 +15,7 @@ public class MovieDetails implements Parcelable {
     private String movieReleaseDate;
     private String movieRating;
     private String movieOverview;
+    private boolean isFavorite;
 
     public MovieDetails(int movieId, String moviePoster, String movieName, String movieReleaseDate,
                         double movieRating, String movieOverview) {
@@ -72,6 +73,14 @@ public class MovieDetails implements Parcelable {
 
     public String getMovieOverview() {
         return movieOverview;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
     }
 
     @Override
