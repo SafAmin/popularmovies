@@ -109,11 +109,17 @@ public class MovieDetailsFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        rvMovieTrailers.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager trailersLayoutManager = new LinearLayoutManager(getContext());
+        rvMovieTrailers.setLayoutManager(trailersLayoutManager);
         rvMovieTrailers.setNestedScrollingEnabled(false);
+
+        RecyclerView.LayoutManager reviewsLayoutManager = new LinearLayoutManager(getContext());
+        rvMovieReviews.setLayoutManager(reviewsLayoutManager);
+        rvMovieReviews.setNestedScrollingEnabled(false);
+
         getMovieTrailers(movieDetails.getMovieId());
         getMovieReviews(movieDetails.getMovieId());
+
         invalidateMovieDetailsView();
     }
 
@@ -132,7 +138,7 @@ public class MovieDetailsFragment extends Fragment {
             public void onResponse(@NonNull Call<MovieTrailersResponse> call,
                                    @NonNull Response<MovieTrailersResponse> response) {
                 mainActivity.getProgressDialog().dismiss();
-                if (response.body().getResults() != null) {
+                if (response.body().getResults() != null && response.body().getResults().size() > 0) {
                     layoutMovieTrailersContainer.setVisibility(View.VISIBLE);
                     rvMovieTrailers.setAdapter(new MovieTrailersAdapter(response.body().getResults()));
                 } else {
@@ -155,7 +161,7 @@ public class MovieDetailsFragment extends Fragment {
             public void onResponse(@NonNull Call<MovieReviewsResponse> call,
                                    @NonNull Response<MovieReviewsResponse> response) {
                 mainActivity.getProgressDialog().dismiss();
-                if (response.body().getResults() != null) {
+                if (response.body().getResults() != null && response.body().getResults().size() > 0) {
                     layoutMovieReviewsContainer.setVisibility(View.VISIBLE);
                     rvMovieReviews.setAdapter(new MovieReviewsAdapter(response.body().getResults()));
                 } else {

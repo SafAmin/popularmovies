@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <ImageView
@@ -30,5 +30,6 @@
         android:layout_marginStart="@dimen/view_movie_trailer_separator_margin_start"
         android:layout_marginEnd="@dimen/view_movie_trailer_separator_margin_end"
         android:layout_marginTop="@dimen/view_movie_trailer_separator_margin_top"
-        android:background="@color/colorGray" />
+        android:layout_marginBottom="@dimen/view_movie_trailer_separator_margin_bottom"
+        android:background="@color/colorSilver" />
 </RelativeLayout>

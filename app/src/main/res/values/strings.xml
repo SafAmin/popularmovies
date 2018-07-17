@@ -2,6 +2,7 @@
     <string name="app_name">Pop Movies</string>
     <string name="sort_label_most_popular">Most Popular</string>
     <string name="sort_label_highest_rated">Highest Rated</string>
+    <string name="sort_label_favorite">Your Favorites</string>
     <string name="movie_details_screen_title">MovieDetails</string>
     <string name="movie_details_loading">Loading....</string>
     <string name="movie_details_error">Something went wrong...Please try later!</string>
