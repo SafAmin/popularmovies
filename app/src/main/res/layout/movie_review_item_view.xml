@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_movie_review_icon"
+        android:layout_width="@dimen/iv_movie_review_play_icon_width"
+        android:layout_height="@dimen/iv_movie_review_play_icon_height"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/iv_movie_review_margin_start"
+        android:contentDescription="@string/movie_poster_description"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_baseline_account_circle" />
 
     <TextView
         android:id="@+id/tv_movie_review"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/iv_movie_review_margin_start"
-        android:textColor="@color/colorBlack"
+        android:layout_toEndOf="@+id/iv_movie_review_icon"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-</LinearLayout>
+
+    <View
+        android:id="@+id/view_movie_reviews_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/view_movie_reviews_separator_margin_bottom"
+        android:layout_marginEnd="@dimen/view_movie_reviews_separator_margin_end"
+        android:layout_marginStart="@dimen/view_movie_reviews_separator_margin_start"
+        android:layout_marginTop="@dimen/view_movie_reviews_separator_margin_top"
+        android:layout_below="@+id/tv_movie_review"
+        android:background="@color/colorSilver" />
+</RelativeLayout>
