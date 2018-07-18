@@ -17,6 +17,10 @@ public class MovieDetails implements Parcelable {
     private String movieOverview;
     private boolean isFavorite;
 
+    public MovieDetails() {
+
+    }
+
     public MovieDetails(int movieId, String moviePoster, String movieName, String movieReleaseDate,
                         double movieRating, String movieOverview) {
         setMovieId(movieId);

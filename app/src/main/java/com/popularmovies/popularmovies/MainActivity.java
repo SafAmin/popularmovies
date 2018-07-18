@@ -11,8 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.popularmovies.popularmovies.details.Favorites;
 import com.popularmovies.popularmovies.models.MovieDetails;
 import com.popularmovies.popularmovies.models.PopularMoviesResponse;
 import com.popularmovies.popularmovies.models.ResultsItem;
@@ -34,27 +37,34 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.layout_placeholder)
+    FrameLayout layoutPlaceholder;
+    @BindView(R.id.tv_no_favorites_message)
+    TextView tvNoFavorites;
     @BindString(R.string.app_name)
     String popMovieScreenTitle;
     @BindString(R.string.movie_details_loading)
     String loading;
     @BindString(R.string.movie_details_error)
     String error;
+
     private ProgressDialog progressDialog;
     private PopularMoviesAPIs service;
+    private Favorites favorites;
+    private List<MovieDetails> movieDetailsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
 
         service = PopularMoviesClient.getRetrofitInstance().create(PopularMoviesAPIs.class);
-
         progressDialog = new ProgressDialog(MainActivity.this);
+        favorites = new Favorites();
+        movieDetailsList = new ArrayList<>();
 
         if (savedInstanceState == null) {
             progressDialog.setMessage(loading);
@@ -110,6 +120,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void getFavoriteMovies() {
+        List<MovieDetails> movieDetailsList = favorites.getFavorites(this);
+        if (movieDetailsList != null) {
+            invalidateView(popMovieScreenTitle, MoviePosterFragment.getInstance(movieDetailsList));
+        } else {
+            togglePostersView(View.GONE, View.VISIBLE);
+        }
+    }
+
     private void generatePopularMoviesDataList(PopularMoviesResponse popularMovies) {
         List<MovieDetails> movieDetailsList = new ArrayList<>();
         ResultsItem resultsItem;
@@ -123,12 +142,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void invalidateView(String title, Fragment fragment) {
+        togglePostersView(View.VISIBLE, View.GONE);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.layout_placeholder, fragment);
         if (!(title.equals(popMovieScreenTitle)))
             fragmentTransaction.addToBackStack(title);
         fragmentTransaction.commit();
+    }
+
+    private void togglePostersView(int postersVisibility, int noFavoritesVisibility) {
+        layoutPlaceholder.setVisibility(postersVisibility);
+        tvNoFavorites.setVisibility(noFavoritesVisibility);
     }
 
     public void setScreenTitle(String title) {
@@ -174,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_highest_rated:
                 getTopRatedMovies();
                 break;
+            case R.id.menu_favorite:
+                getFavoriteMovies();
             default:
                 return super.onOptionsItemSelected(item);
         }

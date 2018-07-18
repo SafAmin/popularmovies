@@ -11,5 +11,6 @@
     <string name="movie_details_reviews_title">Reviews:</string>
     <string name="movie_details_add_favorite_message">Movie added to favorites</string>
     <string name="movie_details_remove_favorite_message">Movie removed from favorites</string>
+    <string name="movie_no_favorites_message">You don\'t have favorite movies</string>
     <string name="movie_poster_description" translatable="false">Poster</string>
 </resources>

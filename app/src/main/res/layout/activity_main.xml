@@ -12,9 +12,18 @@
         app:titleTextColor="@color/colorWhite"
         android:background="@color/colorPrimary" />
 
+    <TextView
+        android:id="@+id/tv_no_favorites_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/movie_no_favorites_message"
+        android:visibility="gone"/>
+
     <FrameLayout
         android:id="@+id/layout_placeholder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
 
 </LinearLayout>
