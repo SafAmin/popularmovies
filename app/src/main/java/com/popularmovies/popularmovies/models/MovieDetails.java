@@ -22,13 +22,14 @@ public class MovieDetails implements Parcelable {
     }
 
     public MovieDetails(int movieId, String moviePoster, String movieName, String movieReleaseDate,
-                        double movieRating, String movieOverview) {
+                        double movieRating, String movieOverview, boolean isFavorite) {
         setMovieId(movieId);
         setMoviePoster(moviePoster);
         setMovieName(movieName);
         setMovieReleaseDate(movieReleaseDate);
         setMovieRating(movieRating);
         setMovieOverview(movieOverview);
+        setFavorite(isFavorite);
     }
 
     public void setMovieId(int id) {

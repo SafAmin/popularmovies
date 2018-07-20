@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/iv_movie_trailer_icon"
@@ -17,15 +16,15 @@
         android:id="@+id/tv_movie_trailer_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/iv_movie_trailer_icon"
         android:layout_marginStart="@dimen/iv_movie_trailer_number_margin_start"
+        android:layout_toEndOf="@+id/iv_movie_trailer_icon"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <View
         android:id="@+id/view_movie_trailer_separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/iv_movie_trailer_icon"
+        android:layout_below="@+id/tv_movie_trailer_number"
         android:layout_marginStart="@dimen/view_movie_trailers_separator_margin_start"
         android:layout_marginEnd="@dimen/view_movie_trailers_separator_margin_end"
         android:layout_marginTop="@dimen/view_movie_trailers_separator_margin_top"

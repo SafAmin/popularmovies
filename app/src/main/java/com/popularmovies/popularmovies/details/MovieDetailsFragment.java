@@ -20,8 +20,12 @@ import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
 import com.popularmovies.popularmovies.models.MovieDetails;
 import com.popularmovies.popularmovies.models.MovieReviewsResponse;
+import com.popularmovies.popularmovies.models.MovieReviewsResultsItem;
 import com.popularmovies.popularmovies.models.MovieTrailersResponse;
+import com.popularmovies.popularmovies.models.MovieTrailersResultsItem;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -98,7 +102,7 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_details, parent, false);
 
         unbinder = ButterKnife.bind(this, view);
@@ -108,7 +112,9 @@ public class MovieDetailsFragment extends Fragment {
         }
 
         Bundle args = getArguments();
-        movieDetails = args.getParcelable(MOVIE_DETAILS_PARAM);
+        if (args != null) {
+            movieDetails = args.getParcelable(MOVIE_DETAILS_PARAM);
+        }
 
         mainActivity.setScreenTitle(movieDetailsTitle);
         mainActivity.addToolbarNavigationListener();
@@ -117,7 +123,7 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         invalidateMovieDetailsView();
     }
 
@@ -137,10 +143,8 @@ public class MovieDetailsFragment extends Fragment {
         rvMovieReviews.setNestedScrollingEnabled(false);
 
         setFavoriteIcon();
-
+        mainActivity.getProgressDialog().dismiss();
         getMovieTrailers(movieDetails.getMovieId());
-        getMovieReviews(movieDetails.getMovieId());
-
         addFavoriteIconListener();
     }
 
@@ -181,18 +185,19 @@ public class MovieDetailsFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<MovieTrailersResponse> call,
                                    @NonNull Response<MovieTrailersResponse> response) {
-                mainActivity.getProgressDialog().dismiss();
-                if (response.body().getResults() != null && response.body().getResults().size() > 0) {
+                List<MovieTrailersResultsItem> result = response.body().getResults();
+                if (result != null && result.size() > 0) {
                     layoutMovieTrailersContainer.setVisibility(View.VISIBLE);
-                    rvMovieTrailers.setAdapter(new MovieTrailersAdapter(mainActivity, response.body().getResults()));
+                    rvMovieTrailers.setAdapter(new MovieTrailersAdapter(mainActivity, result));
                 } else {
                     layoutMovieTrailersContainer.setVisibility(View.GONE);
                 }
+                getMovieReviews(movieDetails.getMovieId());
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieTrailersResponse> call, @NonNull Throwable t) {
-                mainActivity.getProgressDialog().dismiss();
+                getMovieReviews(movieDetails.getMovieId());
                 layoutMovieTrailersContainer.setVisibility(View.GONE);
             }
         });
@@ -205,9 +210,10 @@ public class MovieDetailsFragment extends Fragment {
             public void onResponse(@NonNull Call<MovieReviewsResponse> call,
                                    @NonNull Response<MovieReviewsResponse> response) {
                 mainActivity.getProgressDialog().dismiss();
-                if (response.body().getResults() != null && response.body().getResults().size() > 0) {
+                List<MovieReviewsResultsItem> result = response.body().getResults();
+                if (result != null && result.size() > 0) {
                     layoutMovieReviewsContainer.setVisibility(View.VISIBLE);
-                    rvMovieReviews.setAdapter(new MovieReviewsAdapter(response.body().getResults()));
+                    rvMovieReviews.setAdapter(new MovieReviewsAdapter(result));
                 } else {
                     layoutMovieReviewsContainer.setVisibility(View.GONE);
                 }
@@ -232,7 +238,7 @@ public class MovieDetailsFragment extends Fragment {
      * Save the current state of this fragment
      */
     @Override
-    public void onSaveInstanceState(Bundle currentState) {
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
         super.onSaveInstanceState(currentState);
 
         currentState.putParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM, movieDetails);
