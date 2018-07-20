@@ -1,10 +1,10 @@
 package com.popularmovies.popularmovies.posters;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,46 +19,49 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * This Adapter responsible for making a View for each item in the movie poster GridView
+ * This Adapter responsible for making a View for each item in the movie poster RecyclerView
  * within {@link MoviePosterFragment}
  * <p>
  * Created by Safa Amin on 7/8/2018.
  */
 
-public class MoviePosterAdapter extends BaseAdapter {
+public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.ViewHolder> {
 
-    private Context context;
     private List<MovieDetails> movieDetailsList;
+    private final OnItemClickListener listener;
 
-    MoviePosterAdapter(Context context, List<MovieDetails> movieDetailsList) {
-        this.context = context;
+    MoviePosterAdapter(List<MovieDetails> movieDetailsList, OnItemClickListener listener) {
         this.movieDetailsList = movieDetailsList;
+        this.listener = listener;
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        ViewHolder holder;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (view == null) {
-            view = inflater != null ? inflater.inflate(R.layout.movie_poster_item_view, viewGroup,
-                    false) : null;
-            holder = new ViewHolder(view);
-            if (view != null) {
-                view.setTag(holder);
-            }
-        } else {
-            holder = (ViewHolder) view.getTag();
-        }
-        MovieDetails movieDetails = movieDetailsList.get(position);
-        // Picasso.get().setLoggingEnabled(true);
-        Picasso.get().load(holder.moviePosterBaseURL +
-                movieDetails.getMoviePoster()).into(holder.ivMoviePoster);
-        holder.tvMovieName.setText(movieDetails.getMovieName());
+    @NonNull
+    public MoviePosterAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View rootView = inflater.inflate(R.layout.movie_poster_item_view, parent, false);
 
-        return view;
+        return new ViewHolder(rootView);
     }
 
-    static class ViewHolder {
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        MovieDetails model = movieDetailsList.get(position);
+        holder.bindData(model, listener);
+    }
+
+    public void add(int position, MovieDetails item) {
+        movieDetailsList.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public void remove(int position) {
+        movieDetailsList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.iv_movie_poster)
         ImageView ivMoviePoster;
         @BindView(R.id.tv_movie_name)
@@ -66,22 +69,33 @@ public class MoviePosterAdapter extends BaseAdapter {
         @BindString(R.string.movie_poster_base_url)
         String moviePosterBaseURL;
 
-        ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+        ViewHolder(final View itemView) {
+            super(itemView);
+
+            ButterKnife.bind(this, itemView);
+        }
+
+        void bindData(final MovieDetails model, final OnItemClickListener listener) {
+            Picasso.get().load(moviePosterBaseURL +
+                    model.getMoviePoster()).into(ivMoviePoster);
+            tvMovieName.setText(model.getMovieName());
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(model);
+                }
+            });
         }
     }
 
-    @Override
-    public int getCount() {
-        if (movieDetailsList.size() > 0)
-            return movieDetailsList.size();
-        else
-            return 0;
+    public interface OnItemClickListener {
+        void onItemClick(MovieDetails item);
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public int getItemCount() {
+        return movieDetailsList.size();
     }
 
     @Override

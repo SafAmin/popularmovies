@@ -4,14 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <GridView
-        android:id="@+id/gv_movies_posters"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_movies_posters"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="@dimen/gv_movies_posters_column_width"
-        android:verticalSpacing="0dp"
-        android:horizontalSpacing="0dp"
-        android:stretchMode="columnWidth"
-        android:numColumns="auto_fit"
-        tools:context=".posters.MoviePosterFragment"></GridView>
+        android:scrollbars="vertical"
+        tools:context=".posters.MoviePosterFragment"/>
 </FrameLayout>

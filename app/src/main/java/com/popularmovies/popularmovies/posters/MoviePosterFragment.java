@@ -1,15 +1,17 @@
 package com.popularmovies.popularmovies.posters;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
 import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
@@ -36,8 +38,8 @@ public class MoviePosterFragment extends Fragment {
 
     private static String MOVIE_POSTER_PARAM = "MOVIE_POSTER";
     private static String MOVIE_POSTER_CURRENT_STATE_PARAM = "MOVIE_POSTER_CURRENT_STATE";
-    @BindView(R.id.gv_movies_posters)
-    GridView gvMoviesPosters;
+    @BindView(R.id.rv_movies_posters)
+    RecyclerView rvMoviesPosters;
     @BindString(R.string.app_name)
     String popMovieScreenTitle;
     @BindString(R.string.movie_details_screen_title)
@@ -75,17 +77,28 @@ public class MoviePosterFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        MoviePosterAdapter adapter = new MoviePosterAdapter(getActivity(), movieDetailsList);
-        gvMoviesPosters.setAdapter(adapter);
-        gvMoviesPosters.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (getActivity() != null) {
-                    ((MainActivity) getActivity()).invalidateView(movieDetailsTitle, MovieDetailsFragment.
-                            getInstance(movieDetailsList.get(position)));
-                }
-            }
-        });
+        int mNoOfColumns = calculateNoOfColumns(getContext());
+        RecyclerView.LayoutManager trailersLayoutManager = new GridLayoutManager(getContext(), mNoOfColumns);
+        rvMoviesPosters.setLayoutManager(trailersLayoutManager);
+        rvMoviesPosters.setNestedScrollingEnabled(false);
+        rvMoviesPosters.setAdapter(new MoviePosterAdapter(movieDetailsList,
+                new MoviePosterAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(MovieDetails item) {
+                        if (getActivity() != null) {
+                            ((MainActivity) getActivity()).invalidateView(movieDetailsTitle, MovieDetailsFragment.
+                                    getInstance(item));
+                        }
+                    }
+                }));
+    }
+
+    private int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int noOfColumns = (int) (dpWidth / 180);
+
+        return noOfColumns;
     }
 
     /**
