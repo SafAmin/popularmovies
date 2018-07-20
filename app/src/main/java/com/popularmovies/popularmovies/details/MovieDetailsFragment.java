@@ -164,7 +164,7 @@ public class MovieDetailsFragment extends Fragment {
 
     private void handleOnFavoriteClick() {
         if (movieDetails.isFavorite()) {
-           // movieDetails.setFavorite(false);
+            // movieDetails.setFavorite(false);
             ivMovieFavorite.setImageResource(R.drawable.ic_baseline_star_border);
             removeMovieToFavorite(mapToMovieEntity(movieDetails));
             Toast.makeText(mainActivity, removeFromFavorite, Toast.LENGTH_SHORT).show();

@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < popularMovies.getResults().size(); i++) {
             resultsItem = popularMovies.getResults().get(i);
-            if(favoriteMoviesDetailsList != null && favoriteMoviesDetailsList.size() > 0) {
+            if (favoriteMoviesDetailsList != null && favoriteMoviesDetailsList.size() > 0) {
                 for (int j = 0; j < favoriteMoviesDetailsList.size(); j++) {
                     isFavorite = resultsItem.getId() == favoriteMoviesDetailsList.get(j).getMovieId();
                 }
