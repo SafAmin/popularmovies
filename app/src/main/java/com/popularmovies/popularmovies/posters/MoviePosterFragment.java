@@ -7,11 +7,15 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.Toast;
 
 import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
@@ -82,22 +86,21 @@ public class MoviePosterFragment extends Fragment {
         rvMoviesPosters.setLayoutManager(trailersLayoutManager);
         rvMoviesPosters.setNestedScrollingEnabled(false);
         rvMoviesPosters.setAdapter(new MoviePosterAdapter(movieDetailsList,
-                new MoviePosterAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(MovieDetails item) {
-                        if (getActivity() != null) {
-                            ((MainActivity) getActivity()).invalidateView(movieDetailsTitle, MovieDetailsFragment.
-                                    getInstance(item));
-                        }
-                    }
-                }));
+                new MoviePosterAdapter.OnItemClickListener(){
+            @Override
+            public void onItemClick(MovieDetails item) {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).invalidateView(movieDetailsTitle, MovieDetailsFragment.
+                            getInstance(item));
+                }
+            }
+        }));
     }
 
     private int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         int noOfColumns = (int) (dpWidth / 180);
-
         return noOfColumns;
     }
 

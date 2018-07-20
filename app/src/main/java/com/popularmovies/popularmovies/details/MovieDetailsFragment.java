@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.popularmovies.popularmovies.BuildConfig;
 import com.popularmovies.popularmovies.MainActivity;
 import com.popularmovies.popularmovies.R;
+import com.popularmovies.popularmovies.database.AppExecutors;
+import com.popularmovies.popularmovies.database.MovieEntity;
 import com.popularmovies.popularmovies.models.MovieDetails;
 import com.popularmovies.popularmovies.models.MovieReviewsResponse;
 import com.popularmovies.popularmovies.models.MovieReviewsResultsItem;
@@ -104,16 +106,13 @@ public class MovieDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movie_details, parent, false);
 
         unbinder = ButterKnife.bind(this, view);
-
         if (savedInstanceState != null) {
             movieDetails = savedInstanceState.getParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM);
         }
-
         Bundle args = getArguments();
         if (args != null) {
             movieDetails = args.getParcelable(MOVIE_DETAILS_PARAM);
         }
-
         mainActivity.setScreenTitle(movieDetailsTitle);
         mainActivity.addToolbarNavigationListener();
 
@@ -141,7 +140,7 @@ public class MovieDetailsFragment extends Fragment {
         rvMovieReviews.setNestedScrollingEnabled(false);
 
         setFavoriteIcon();
-        mainActivity.getProgressDialog().dismiss();
+        mainActivity.getProgressDialog().show();
         getMovieTrailers(movieDetails.getMovieId());
         addFavoriteIconListener();
     }
@@ -165,14 +164,43 @@ public class MovieDetailsFragment extends Fragment {
 
     private void handleOnFavoriteClick() {
         if (movieDetails.isFavorite()) {
-            movieDetails.setFavorite(false);
+           // movieDetails.setFavorite(false);
             ivMovieFavorite.setImageResource(R.drawable.ic_baseline_star_border);
+            removeMovieToFavorite(mapToMovieEntity(movieDetails));
             Toast.makeText(mainActivity, removeFromFavorite, Toast.LENGTH_SHORT).show();
         } else {
             movieDetails.setFavorite(true);
             ivMovieFavorite.setImageResource(R.drawable.ic_baseline_star);
+            addMovieToFavorite(mapToMovieEntity(movieDetails));
             Toast.makeText(mainActivity, addToFavorite, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private MovieEntity mapToMovieEntity(MovieDetails movieDetails) {
+        MovieEntity movieEntity = new MovieEntity(movieDetails.getMovieId(), movieDetails.getMoviePoster(),
+                movieDetails.getMovieName(), movieDetails.getMovieReleaseDate(),
+                movieDetails.getMovieRating(), movieDetails.getMovieOverview(),
+                movieDetails.isFavorite());
+
+        return movieEntity;
+    }
+
+    private void addMovieToFavorite(final MovieEntity movieEntity) {
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mainActivity.getDatabase().movieDao().insertFavoriteMovie(movieEntity);
+            }
+        });
+    }
+
+    private void removeMovieToFavorite(final MovieEntity movieEntity) {
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mainActivity.getDatabase().movieDao().deleteFavorite(movieEntity);
+            }
+        });
     }
 
     public void getMovieTrailers(int movieId) {
@@ -205,13 +233,14 @@ public class MovieDetailsFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<MovieReviewsResponse> call,
                                    @NonNull Response<MovieReviewsResponse> response) {
-                mainActivity.getProgressDialog().dismiss();
                 List<MovieReviewsResultsItem> result = response.body().getResults();
                 if (result != null && result.size() > 0) {
                     layoutMovieReviewsContainer.setVisibility(View.VISIBLE);
                     rvMovieReviews.setAdapter(new MovieReviewsAdapter(result));
+                    mainActivity.getProgressDialog().dismiss();
                 } else {
                     layoutMovieReviewsContainer.setVisibility(View.GONE);
+                    mainActivity.getProgressDialog().dismiss();
                 }
             }
 

@@ -42,6 +42,7 @@ ext {
     picassoVersion = '2.71828'
     retrofitVersion = '2.3.0'
     loggingInterceptorVersion = '3.10.0'
+    roomVersion = '1.1.1'
 }
 
 dependencies {
@@ -51,6 +52,7 @@ dependencies {
     testImplementation "junit:junit:${junitLibVersion}"
     androidTestImplementation "com.android.support.test:runner:${testRunnerVersion}"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${espressoCoreVersion}"
+    implementation "com.android.support:recyclerview-v7:${supportLibVersion}"
 
     // Butte Knife Field and method binding for Android views
     implementation "com.jakewharton:butterknife:${butterknifeVersion}"
@@ -64,5 +66,9 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     implementation "com.squareup.okhttp3:logging-interceptor:${loggingInterceptorVersion}"
 
-    implementation "com.android.support:recyclerview-v7:${supportLibVersion}"
+    //Room
+    implementation "android.arch.persistence.room:runtime:${roomVersion}"
+    annotationProcessor "android.arch.persistence.room:compiler:${roomVersion}"
+    implementation "android.arch.lifecycle:extensions:${roomVersion}"
+    annotationProcessor "android.arch.lifecycle:compiler:${roomVersion}"
 }

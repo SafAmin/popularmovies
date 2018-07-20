@@ -1,8 +1,11 @@
 package com.popularmovies.popularmovies;
 
 import android.app.ProgressDialog;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +18,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.popularmovies.popularmovies.database.AppDatabase;
+import com.popularmovies.popularmovies.database.MainViewModel;
+import com.popularmovies.popularmovies.database.MovieEntity;
 import com.popularmovies.popularmovies.details.MovieDetailsFragment;
 import com.popularmovies.popularmovies.models.MovieDetails;
 import com.popularmovies.popularmovies.models.PopularMoviesResponse;
@@ -50,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     private PopularMoviesAPIs service;
+    private AppDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +68,14 @@ public class MainActivity extends AppCompatActivity {
 
         service = PopularMoviesClient.getRetrofitInstance().create(PopularMoviesAPIs.class);
         progressDialog = new ProgressDialog(MainActivity.this);
+        database = AppDatabase.getInstance(getApplicationContext());
 
         if (savedInstanceState == null) {
             progressDialog.setMessage(loading);
             progressDialog.setCancelable(false);
             progressDialog.show();
             getPopularMovies();
+            getFavoriteMovies();
         }
     }
 
@@ -116,8 +125,39 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void getFavoriteMovies() {
+    private void invalidateFavoritesView() {
+        List<MovieDetails> movieDetails = getFavoriteMovies();
+        if (movieDetails != null && movieDetails.size() > 0) {
+            invalidateView(popMovieScreenTitle, MoviePosterFragment.getInstance(movieDetails));
+        } else {
+            togglePostersView(View.GONE, View.VISIBLE);
+        }
+    }
 
+    private List<MovieDetails> getFavoriteMovies() {
+        final List<MovieDetails> movieDetailsList = new ArrayList<>();
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getFavoriteMovies().observe(this, new Observer<List<MovieEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<MovieEntity> favoriteMovieEntries) {
+                MovieEntity movieEntity;
+                progressDialog.dismiss();
+                if (favoriteMovieEntries != null && favoriteMovieEntries.size() > 0) {
+                    togglePostersView(View.VISIBLE, View.GONE);
+                    movieDetailsList.clear();
+
+                    for (int i = 0; i < favoriteMovieEntries.size(); i++) {
+                        movieEntity = favoriteMovieEntries.get(i);
+                        movieDetailsList.add(i, new MovieDetails(movieEntity.getId(),
+                                movieEntity.getPoster(),
+                                movieEntity.getName(), movieEntity.getReleaseDate(),
+                                Double.valueOf(movieEntity.getRating()),
+                                movieEntity.getOverview(), movieEntity.isFavorite()));
+                    }
+                }
+            }
+        });
+        return movieDetailsList;
     }
 
     /**
@@ -128,11 +168,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private void generatePopularMoviesDataList(PopularMoviesResponse popularMovies) {
         List<MovieDetails> movieDetailsList = new ArrayList<>();
+        List<MovieDetails> favoriteMoviesDetailsList = getFavoriteMovies();
         ResultsItem resultsItem;
+        boolean isFavorite = false;
 
         for (int i = 0; i < popularMovies.getResults().size(); i++) {
             resultsItem = popularMovies.getResults().get(i);
-            boolean isFavorite = false;
+            if(favoriteMoviesDetailsList != null && favoriteMoviesDetailsList.size() > 0) {
+                for (int j = 0; j < favoriteMoviesDetailsList.size(); j++) {
+                    isFavorite = resultsItem.getId() == favoriteMoviesDetailsList.get(j).getMovieId();
+                }
+            }
             movieDetailsList.add(i, new MovieDetails(resultsItem.getId(), resultsItem.getPosterPath(),
                     resultsItem.getOriginalTitle(), resultsItem.getReleaseDate(),
                     resultsItem.getVoteAverage(), resultsItem.getOverview(), isFavorite));
@@ -168,6 +214,10 @@ public class MainActivity extends AppCompatActivity {
         return progressDialog;
     }
 
+    public AppDatabase getDatabase() {
+        return database;
+    }
+
     /**
      * Inflate the menu; this adds items to the action bar if it is present.
      *
@@ -194,13 +244,16 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.menu_most_popular:
+                progressDialog.show();
                 getPopularMovies();
                 break;
             case R.id.menu_highest_rated:
+                progressDialog.show();
                 getTopRatedMovies();
                 break;
             case R.id.menu_favorite:
-                getFavoriteMovies();
+                progressDialog.show();
+                invalidateFavoritesView();
             default:
                 return super.onOptionsItemSelected(item);
         }
