@@ -71,6 +71,11 @@ public class MoviePosterAdapter extends BaseAdapter {
         }
     }
 
+    public void setFavorites(List<MovieDetails> favorites) {
+        movieDetailsList = favorites;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         if (movieDetailsList.size() > 0)

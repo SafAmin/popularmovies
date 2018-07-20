@@ -3,6 +3,7 @@ package com.popularmovies.popularmovies.posters;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,32 +56,34 @@ public class MoviePosterFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies_posters, parent, false);
-
         unbinder = ButterKnife.bind(this, view);
-
         if (savedInstanceState != null) {
             movieDetailsList = savedInstanceState.getParcelableArrayList(MOVIE_POSTER_CURRENT_STATE_PARAM);
         }
-
         Bundle args = getArguments();
-        movieDetailsList = args.getParcelableArrayList(MOVIE_POSTER_PARAM);
-
-        ((MainActivity) getActivity()).setScreenTitle(popMovieScreenTitle);
+        if (args != null) {
+            movieDetailsList = args.getParcelableArrayList(MOVIE_POSTER_PARAM);
+        }
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).setScreenTitle(popMovieScreenTitle);
+        }
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         MoviePosterAdapter adapter = new MoviePosterAdapter(getActivity(), movieDetailsList);
         gvMoviesPosters.setAdapter(adapter);
         gvMoviesPosters.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivity) getActivity()).invalidateView(movieDetailsTitle, MovieDetailsFragment.
-                        getInstance(movieDetailsList.get(position)));
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).invalidateView(movieDetailsTitle, MovieDetailsFragment.
+                            getInstance(movieDetailsList.get(position)));
+                }
             }
         });
     }
@@ -89,7 +92,7 @@ public class MoviePosterFragment extends Fragment {
      * Save the current state of this fragment
      */
     @Override
-    public void onSaveInstanceState(Bundle currentState) {
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
         super.onSaveInstanceState(currentState);
 
         currentState.putParcelableArrayList(MOVIE_POSTER_CURRENT_STATE_PARAM,
