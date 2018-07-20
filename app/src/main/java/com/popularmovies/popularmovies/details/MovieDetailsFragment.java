@@ -1,6 +1,7 @@
 package com.popularmovies.popularmovies.details;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import com.popularmovies.popularmovies.models.MovieTrailersResponse;
 import com.popularmovies.popularmovies.models.MovieTrailersResultsItem;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindString;
@@ -48,6 +51,10 @@ public class MovieDetailsFragment extends Fragment {
 
     private static String MOVIE_DETAILS_PARAM = "MOVIE_DETAILS";
     private static String MOVIE_DETAILS_CURRENT_STATE_PARAM = "MOVIE_DETAILS_CURRENT_STATE";
+    private static String MOVIE_DETAILS_TRAILERS_STATE_PARAM = "MOVIE_DETAILS_TRAILERS_STATE";
+    private static String MOVIE_DETAILS_REVIEWS_STATE_PARAM = "MOVIE_DETAILS_REVIEWS_STATE";
+    @BindView(R.id.scroll_movie_details)
+    ScrollView scrollMovieDetails;
     @BindView(R.id.iv_movie_details_poster)
     ImageView ivMoviePoster;
     @BindView(R.id.tv_movie_details_name)
@@ -82,6 +89,8 @@ public class MovieDetailsFragment extends Fragment {
 
     private Unbinder unbinder;
     private MovieDetails movieDetails;
+    private List<MovieTrailersResultsItem> trailers;
+    private List<MovieReviewsResultsItem> reviews;
     private MainActivity mainActivity;
 
     public static MovieDetailsFragment getInstance(MovieDetails movieDetails) {
@@ -106,13 +115,26 @@ public class MovieDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movie_details, parent, false);
 
         unbinder = ButterKnife.bind(this, view);
-        if (savedInstanceState != null) {
-            movieDetails = savedInstanceState.getParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM);
-        }
+
         Bundle args = getArguments();
         if (args != null) {
             movieDetails = args.getParcelable(MOVIE_DETAILS_PARAM);
         }
+
+        if (savedInstanceState != null) {
+            movieDetails = savedInstanceState.getParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM);
+            trailers = savedInstanceState.getParcelableArrayList(MOVIE_DETAILS_TRAILERS_STATE_PARAM);
+            reviews = savedInstanceState.getParcelableArrayList(MOVIE_DETAILS_REVIEWS_STATE_PARAM);
+            invalidateTrailersView(trailers);
+            invalidateReviewsView(reviews);
+        } else {
+            mainActivity.showProgressDialog();
+            getMovieTrailers(movieDetails.getMovieId());
+        }
+
+        addFavoriteIconListener();
+        setFavoriteIcon();
+
         mainActivity.setScreenTitle(movieDetailsTitle);
         mainActivity.addToolbarNavigationListener();
 
@@ -138,11 +160,6 @@ public class MovieDetailsFragment extends Fragment {
         RecyclerView.LayoutManager reviewsLayoutManager = new LinearLayoutManager(getContext());
         rvMovieReviews.setLayoutManager(reviewsLayoutManager);
         rvMovieReviews.setNestedScrollingEnabled(false);
-
-        setFavoriteIcon();
-        mainActivity.getProgressDialog().show();
-        getMovieTrailers(movieDetails.getMovieId());
-        addFavoriteIconListener();
     }
 
     private void setFavoriteIcon() {
@@ -208,14 +225,8 @@ public class MovieDetailsFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<MovieTrailersResponse> call,
                                    @NonNull Response<MovieTrailersResponse> response) {
-                List<MovieTrailersResultsItem> result = response.body().getResults();
-                if (result != null && result.size() > 0) {
-                    layoutMovieTrailersContainer.setVisibility(View.VISIBLE);
-                    rvMovieTrailers.setAdapter(new MovieTrailersAdapter(mainActivity, result));
-                } else {
-                    layoutMovieTrailersContainer.setVisibility(View.GONE);
-                }
-                getMovieReviews(movieDetails.getMovieId());
+                trailers = response.body().getResults();
+                invalidateTrailersView(trailers);
             }
 
             @Override
@@ -232,23 +243,37 @@ public class MovieDetailsFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<MovieReviewsResponse> call,
                                    @NonNull Response<MovieReviewsResponse> response) {
-                List<MovieReviewsResultsItem> result = response.body().getResults();
-                if (result != null && result.size() > 0) {
-                    layoutMovieReviewsContainer.setVisibility(View.VISIBLE);
-                    rvMovieReviews.setAdapter(new MovieReviewsAdapter(result));
-                    mainActivity.getProgressDialog().dismiss();
-                } else {
-                    layoutMovieReviewsContainer.setVisibility(View.GONE);
-                    mainActivity.getProgressDialog().dismiss();
-                }
+                reviews = response.body().getResults();
+                invalidateReviewsView(reviews);
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieReviewsResponse> call, @NonNull Throwable t) {
-                mainActivity.getProgressDialog().dismiss();
+                mainActivity.dismissProgressDialog();
                 layoutMovieReviewsContainer.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void invalidateTrailersView(List<MovieTrailersResultsItem> trailers) {
+        if (trailers != null && trailers.size() > 0) {
+            layoutMovieTrailersContainer.setVisibility(View.VISIBLE);
+            rvMovieTrailers.setAdapter(new MovieTrailersAdapter(mainActivity, trailers));
+        } else {
+            layoutMovieTrailersContainer.setVisibility(View.GONE);
+        }
+        getMovieReviews(movieDetails.getMovieId());
+    }
+
+    private void invalidateReviewsView(List<MovieReviewsResultsItem> reviews) {
+        if (reviews != null && reviews.size() > 0) {
+            layoutMovieReviewsContainer.setVisibility(View.VISIBLE);
+            rvMovieReviews.setAdapter(new MovieReviewsAdapter(reviews));
+            mainActivity.dismissProgressDialog();
+        } else {
+            layoutMovieReviewsContainer.setVisibility(View.GONE);
+            mainActivity.dismissProgressDialog();
+        }
     }
 
     @Override
@@ -266,7 +291,29 @@ public class MovieDetailsFragment extends Fragment {
         super.onSaveInstanceState(currentState);
 
         currentState.putParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM, movieDetails);
+        currentState.putParcelableArrayList(MOVIE_DETAILS_TRAILERS_STATE_PARAM,
+                (ArrayList<? extends Parcelable>) trailers);
+        currentState.putParcelableArrayList(MOVIE_DETAILS_REVIEWS_STATE_PARAM,
+                (ArrayList<? extends Parcelable>) reviews);
+
+     /*   currentState.putIntArray("ARTICLE_SCROLL_POSITION",
+                new int[]{scrollMovieDetails.getScrollX(), scrollMovieDetails.getScrollY()});*/
     }
+
+/*    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            final int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
+            if (position != null)
+                scrollMovieDetails.post(new Runnable() {
+                    public void run() {
+                        scrollMovieDetails.scrollTo(position[0], position[1]);
+                    }
+                });
+        }
+    }*/
 
     @Override
     public void onDestroyView() {
