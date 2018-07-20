@@ -15,10 +15,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.popularmovies.popularmovies.details.Favorites;
 import com.popularmovies.popularmovies.details.MovieDetailsFragment;
 import com.popularmovies.popularmovies.models.MovieDetails;
-import com.popularmovies.popularmovies.models.Options;
 import com.popularmovies.popularmovies.models.PopularMoviesResponse;
 import com.popularmovies.popularmovies.models.ResultsItem;
 import com.popularmovies.popularmovies.network.PopularMoviesAPIs;
@@ -52,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     private PopularMoviesAPIs service;
-    private Favorites favorites;
-    private int currentOption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
         service = PopularMoviesClient.getRetrofitInstance().create(PopularMoviesAPIs.class);
         progressDialog = new ProgressDialog(MainActivity.this);
-        favorites = new Favorites();
 
         if (savedInstanceState == null) {
             progressDialog.setMessage(loading);
@@ -122,34 +117,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getFavoriteMovies() {
-        List<MovieDetails> movieDetailsList = favorites.getFavorites(this);
-        if (movieDetailsList != null && movieDetailsList.size() > 0) {
-            invalidateView(popMovieScreenTitle, MoviePosterFragment.getInstance(movieDetailsList));
-        } else {
-            togglePostersView(View.GONE, View.VISIBLE);
-        }
+
     }
 
     /**
      * This method responsible for map API response to view model of type {@link MovieDetails} which used to
-     * invalidate views with data in {@link MovieDetailsFragment} and check if the movie
-     * marked as a favorite movie to update the flag
+     * invalidate views with data in {@link MovieDetailsFragment}
      *
      * @param popularMovies API response
      */
     private void generatePopularMoviesDataList(PopularMoviesResponse popularMovies) {
         List<MovieDetails> movieDetailsList = new ArrayList<>();
-        List<MovieDetails> favoriteMoviesDetailsList = favorites.getFavorites(this);
         ResultsItem resultsItem;
 
         for (int i = 0; i < popularMovies.getResults().size(); i++) {
             resultsItem = popularMovies.getResults().get(i);
             boolean isFavorite = false;
-            if (favoriteMoviesDetailsList != null) {
-                for (int j = 0; j < favoriteMoviesDetailsList.size(); j++) {
-                    isFavorite = resultsItem.getId() == favoriteMoviesDetailsList.get(j).getMovieId();
-                }
-            }
             movieDetailsList.add(i, new MovieDetails(resultsItem.getId(), resultsItem.getPosterPath(),
                     resultsItem.getOriginalTitle(), resultsItem.getReleaseDate(),
                     resultsItem.getVoteAverage(), resultsItem.getOverview(), isFavorite));
@@ -211,29 +194,17 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.menu_most_popular:
-                currentOption = Options.MOST_POPULAR;
                 getPopularMovies();
                 break;
             case R.id.menu_highest_rated:
-                currentOption = Options.HIGHEST_RATED;
                 getTopRatedMovies();
                 break;
             case R.id.menu_favorite:
-                currentOption = Options.FAVORITE;
                 getFavoriteMovies();
             default:
                 return super.onOptionsItemSelected(item);
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (currentOption == Options.FAVORITE) {
-            getFavoriteMovies();
-        } else {
-            super.onBackPressed();
-        }
     }
 }

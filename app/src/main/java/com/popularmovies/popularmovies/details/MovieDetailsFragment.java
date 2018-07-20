@@ -81,7 +81,6 @@ public class MovieDetailsFragment extends Fragment {
     private Unbinder unbinder;
     private MovieDetails movieDetails;
     private MainActivity mainActivity;
-    private Favorites favorites;
 
     public static MovieDetailsFragment getInstance(MovieDetails movieDetails) {
         MovieDetailsFragment fragment = new MovieDetailsFragment();
@@ -98,7 +97,6 @@ public class MovieDetailsFragment extends Fragment {
 
         setHasOptionsMenu(true);
         mainActivity = (MainActivity) getActivity();
-        favorites = new Favorites();
     }
 
     @Override
@@ -169,12 +167,10 @@ public class MovieDetailsFragment extends Fragment {
         if (movieDetails.isFavorite()) {
             movieDetails.setFavorite(false);
             ivMovieFavorite.setImageResource(R.drawable.ic_baseline_star_border);
-            favorites.removeFavorites(mainActivity, movieDetails);
             Toast.makeText(mainActivity, removeFromFavorite, Toast.LENGTH_SHORT).show();
         } else {
             movieDetails.setFavorite(true);
             ivMovieFavorite.setImageResource(R.drawable.ic_baseline_star);
-            favorites.addToFavorite(mainActivity, movieDetails);
             Toast.makeText(mainActivity, addToFavorite, Toast.LENGTH_SHORT).show();
         }
     }
