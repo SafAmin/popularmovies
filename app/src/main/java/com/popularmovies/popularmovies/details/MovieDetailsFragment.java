@@ -92,7 +92,6 @@ public class MovieDetailsFragment extends Fragment {
     private List<MovieTrailersResultsItem> trailers;
     private List<MovieReviewsResultsItem> reviews;
     private MainActivity mainActivity;
-    private boolean changeFavorite;
 
     public static MovieDetailsFragment getInstance(MovieDetails movieDetails) {
         MovieDetailsFragment fragment = new MovieDetailsFragment();
@@ -133,15 +132,13 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     private void saveState(Bundle savedInstanceState) {
-        changeFavorite = movieDetails.isFavorite();
-        if (savedInstanceState != null && movieDetails.isFavorite() == changeFavorite) {
+        if (savedInstanceState != null) {
             movieDetails = savedInstanceState.getParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM);
             trailers = savedInstanceState.getParcelableArrayList(MOVIE_DETAILS_TRAILERS_STATE_PARAM);
             reviews = savedInstanceState.getParcelableArrayList(MOVIE_DETAILS_REVIEWS_STATE_PARAM);
             invalidateTrailersView(trailers);
             invalidateReviewsView(reviews);
         } else {
-            movieDetails.setFavorite(changeFavorite);
             mainActivity.showProgressDialog();
             getMovieTrailers(movieDetails.getMovieId());
         }
