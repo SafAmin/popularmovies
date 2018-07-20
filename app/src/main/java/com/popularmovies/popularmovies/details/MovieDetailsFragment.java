@@ -92,6 +92,7 @@ public class MovieDetailsFragment extends Fragment {
     private List<MovieTrailersResultsItem> trailers;
     private List<MovieReviewsResultsItem> reviews;
     private MainActivity mainActivity;
+    private boolean changeFavorite;
 
     public static MovieDetailsFragment getInstance(MovieDetails movieDetails) {
         MovieDetailsFragment fragment = new MovieDetailsFragment();
@@ -121,17 +122,7 @@ public class MovieDetailsFragment extends Fragment {
             movieDetails = args.getParcelable(MOVIE_DETAILS_PARAM);
         }
 
-        if (savedInstanceState != null) {
-            movieDetails = savedInstanceState.getParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM);
-            trailers = savedInstanceState.getParcelableArrayList(MOVIE_DETAILS_TRAILERS_STATE_PARAM);
-            reviews = savedInstanceState.getParcelableArrayList(MOVIE_DETAILS_REVIEWS_STATE_PARAM);
-            invalidateTrailersView(trailers);
-            invalidateReviewsView(reviews);
-        } else {
-            mainActivity.showProgressDialog();
-            getMovieTrailers(movieDetails.getMovieId());
-        }
-
+        saveState(savedInstanceState);
         addFavoriteIconListener();
         setFavoriteIcon();
 
@@ -139,6 +130,21 @@ public class MovieDetailsFragment extends Fragment {
         mainActivity.addToolbarNavigationListener();
 
         return view;
+    }
+
+    private void saveState(Bundle savedInstanceState) {
+        changeFavorite = movieDetails.isFavorite();
+        if (savedInstanceState != null && movieDetails.isFavorite() == changeFavorite) {
+            movieDetails = savedInstanceState.getParcelable(MOVIE_DETAILS_CURRENT_STATE_PARAM);
+            trailers = savedInstanceState.getParcelableArrayList(MOVIE_DETAILS_TRAILERS_STATE_PARAM);
+            reviews = savedInstanceState.getParcelableArrayList(MOVIE_DETAILS_REVIEWS_STATE_PARAM);
+            invalidateTrailersView(trailers);
+            invalidateReviewsView(reviews);
+        } else {
+            movieDetails.setFavorite(changeFavorite);
+            mainActivity.showProgressDialog();
+            getMovieTrailers(movieDetails.getMovieId());
+        }
     }
 
     @Override
@@ -193,12 +199,10 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     private MovieEntity mapToMovieEntity(MovieDetails movieDetails) {
-        MovieEntity movieEntity = new MovieEntity(movieDetails.getMovieId(), movieDetails.getMoviePoster(),
+        return new MovieEntity(movieDetails.getMovieId(), movieDetails.getMoviePoster(),
                 movieDetails.getMovieName(), movieDetails.getMovieReleaseDate(),
                 movieDetails.getMovieRating(), movieDetails.getMovieOverview(),
                 movieDetails.isFavorite());
-
-        return movieEntity;
     }
 
     private void addMovieToFavorite(final MovieEntity movieEntity) {
@@ -295,25 +299,7 @@ public class MovieDetailsFragment extends Fragment {
                 (ArrayList<? extends Parcelable>) trailers);
         currentState.putParcelableArrayList(MOVIE_DETAILS_REVIEWS_STATE_PARAM,
                 (ArrayList<? extends Parcelable>) reviews);
-
-     /*   currentState.putIntArray("ARTICLE_SCROLL_POSITION",
-                new int[]{scrollMovieDetails.getScrollX(), scrollMovieDetails.getScrollY()});*/
     }
-
-/*    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            final int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
-            if (position != null)
-                scrollMovieDetails.post(new Runnable() {
-                    public void run() {
-                        scrollMovieDetails.scrollTo(position[0], position[1]);
-                    }
-                });
-        }
-    }*/
 
     @Override
     public void onDestroyView() {
