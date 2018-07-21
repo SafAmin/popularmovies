@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void invalidateFavoritesView() {
-        if (favoriteMovieDetailsList != null && favoriteMovieDetailsList.size() > 0) {
+        if (!favoriteMovieDetailsList.isEmpty()) {
             invalidateView(popMovieScreenTitle, MoviePosterFragment.getInstance(favoriteMovieDetailsList));
         } else {
             togglePostersView(View.GONE, View.VISIBLE);
@@ -148,10 +148,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<MovieEntity> favoriteMovieEntries) {
                 dismissProgressDialog();
-                if (favoriteMovieEntries != null && favoriteMovieEntries.size() > 0) {
+                if (!favoriteMovieEntries.isEmpty()) {
                     togglePostersView(View.VISIBLE, View.GONE);
                     favoriteMovieDetailsList.clear();
                     createFavoriteMovies(favoriteMovieEntries);
+                } else {
+                    favoriteMovieDetailsList.clear();
+                    togglePostersView(View.GONE, View.VISIBLE);
                 }
             }
         });
