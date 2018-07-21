@@ -221,7 +221,7 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     public void getMovieTrailers(int movieId) {
-        Call<MovieTrailersResponse> call = mainActivity.getPopularMoviesAPI().getMovieTrailers(movieId, BuildConfig.ApiKey);
+        Call<MovieTrailersResponse> call = mainActivity.getPopularMoviesAPI().getMovieTrailers(movieId, BuildConfig.MovieDBAPIKey);
         call.enqueue(new Callback<MovieTrailersResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieTrailersResponse> call,
@@ -239,7 +239,7 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     public void getMovieReviews(int movieId) {
-        Call<MovieReviewsResponse> call = mainActivity.getPopularMoviesAPI().getMovieReviews(movieId, BuildConfig.ApiKey);
+        Call<MovieReviewsResponse> call = mainActivity.getPopularMoviesAPI().getMovieReviews(movieId, BuildConfig.MovieDBAPIKey);
         call.enqueue(new Callback<MovieReviewsResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieReviewsResponse> call,

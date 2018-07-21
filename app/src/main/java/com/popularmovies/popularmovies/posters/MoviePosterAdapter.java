@@ -46,7 +46,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MovieDetails model = movieDetailsList.get(position);
+        MovieDetails model = movieDetailsList.get(holder.getAdapterPosition());
         holder.bindData(model, listener);
     }
 

@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getPopularMovies() {
         showProgressDialog();
-        Call<PopularMoviesResponse> call = service.getPopularMovies(BuildConfig.ApiKey);
+        Call<PopularMoviesResponse> call = service.getPopularMovies(BuildConfig.MovieDBAPIKey);
         call.enqueue(new Callback<PopularMoviesResponse>() {
             @Override
             public void onResponse(@NonNull Call<PopularMoviesResponse> call,
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getTopRatedMovies() {
         showProgressDialog();
-        Call<PopularMoviesResponse> call = service.getTopRatedMovies(BuildConfig.ApiKey);
+        Call<PopularMoviesResponse> call = service.getTopRatedMovies(BuildConfig.MovieDBAPIKey);
         call.enqueue(new Callback<PopularMoviesResponse>() {
             @Override
             public void onResponse(@NonNull Call<PopularMoviesResponse> call,

@@ -9,6 +9,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "MovieDBAPIKey", POPULAR_MOVIES_API_KEY
+        resValue 'string', "MovieDBAPIKey", POPULAR_MOVIES_API_KEY
     }
     buildTypes {
         release {
@@ -17,17 +19,14 @@ android {
         }
     }
 }
+
 android {
     buildTypes {
         debug {
-            buildConfigField 'String', "ApiKey", POPULAR_MOVIES_API_KEY
-            resValue 'string', "api_key", POPULAR_MOVIES_API_KEY
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', "ApiKey", POPULAR_MOVIES_API_KEY
-            resValue 'string', "api_key", POPULAR_MOVIES_API_KEY
         }
     }
 }
